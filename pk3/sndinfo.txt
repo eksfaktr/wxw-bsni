@@ -1,0 +1,5 @@
+flashlight/click SFLCLICK
+flashlight/hum SFLHUM
+flashlight/open SFLOPEN
+flashlight/close SFLCLOSE
+flashlight/wind SFLWIND

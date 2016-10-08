@@ -1,0 +1,126 @@
+// WEAPON 1B: Makoto Arms Solar Flashlight
+
+/* 	Born from a "happy accident" at the Makoto Arms labs in
+	southern Okinawa, the Solar Flashlight resulted from an
+	experiment in using a hand-cranked dynamo to provide
+	up to five times more power than other, similarly-built
+	hand-crank flashlights. The dynamo ended up producing so
+	much power through the flashlight that the light bulb
+	exploded, but not after its powerful ultra-violet light
+	gave an unwitting passer-by a slight sunburn.
+	
+	Much experimentation was done to duplicate the same results
+	over a longer period of time with a more durable source of
+	light. Eventually, the Makoto scientists produced a light bulb
+	capable of producing third-degree burns (the Research Crimes
+	Prevention Agency at some point stepped in to ensure that
+	no live test subjects were being used). The Solar Flashlight
+	was finally pushed to market, but with it being classified as
+	a "Chapter 2 Inhumane Weapon" under the Arms Limitation Act of
+	2060, no government agency or military branch would purchase
+	any, so Makoto quickly remarketed the Solar Flashlight as a
+	"portable solar battery charging device" with appropriate
+	warning signage. Even so, however, the Solar Flashlight has
+	been due for a recall for several decades. Until that happens,
+	though, it's quite effective against demons (and vampires, but
+	that's not really a Doom thing...)						*/
+
+ACTOR SolarFlashlightBeam
+{
+	+NOBLOCKMAP
+	+NOGRAVITY
+	+PUFFONACTORS
+	states
+	{
+	Spawn:
+		SFLB A 0
+		SFLB A 1 BRIGHT
+		Stop
+	}
+}
+
+ACTOR SolarFlashlightEnergy : Ammo
+{
+	+IGNORESKILL
+	Inventory.MaxAmount 100
+	Inventory.Amount 100
+}
+
+actor SolarFlashlight : Weapon replaces Chainsaw
+{
+	Weapon.SlotNumber 0
+	Radius 20
+	Height 12
+	Weapon.AmmoType "SolarFlashlightEnergy"
+	Weapon.AmmoUse 1
+	Weapon.AmmoGive 100
+	Inventory.PickupMessage "You got the Solar Flashlight! (Slot 1)"
+	Weapon.SelectionOrder 2200
+	Scale 0.35
+	+WEAPON.MeleeWeapon
+	+WEAPON.NoAlert
+	Obituary "%o was given severe skin cancer by %k."
+	States
+	{
+	Spawn:
+		SFLP A -1
+		Stop
+	Select:
+		SFLG A 1 A_Raise
+		Loop
+	Deselect:
+		SFLG A 0 A_StopSoundEx("SoundSlot5")
+		SFLG A 1 A_ClearRefire
+		SFLG A 1 A_Lower
+		Goto Deselect+2
+	Ready:
+		SFLG A 1 A_WeaponReady
+		Loop
+	Fire:
+		SFLG A 0 A_JumpIfNoAmmo("WindUp")
+		SFLG A 0 A_PlaySoundEx("flashlight/click","Weapon")
+		SFLG A 0 A_PlaySoundEx("flashlight/hum","SoundSlot5",1)
+		SFLF A 1 BRIGHT A_FireBullets(1,1,-1,(1),"SolarFlashlightBeam",1,1600)
+		SFLF A 1 BRIGHT A_FireBullets(1,1,-1,(1),"SolarFlashlightBeam",0,1600)
+		SFLF A 1 BRIGHT A_Refire
+		SFLG A 0 A_PlaySoundEx("flashlight/click","Weapon")
+		SFLG A 0 A_StopSoundEx("SoundSlot5")
+		Goto Ready
+	Hold:
+		SFLG A 0 A_JumpIfNoAmmo("WindUp")
+		SFLF A 1 BRIGHT A_FireBullets(1,1,-1,(1),"SolarFlashlightBeam",1,1600)
+		SFLF A 1 BRIGHT A_FireBullets(1,1,-1,(1),"SolarFlashlightBeam",0,1600)
+		SFLF A 1 BRIGHT A_Refire
+		SFLG A 0 A_PlaySoundEx("flashlight/click","Weapon")
+		SFLG A 0 A_StopSoundEx("SoundSlot5")
+		Goto Ready
+	WindUp:
+		SFLG A 0 A_StopSoundEx("SoundSlot5")
+		SFLG A 1 A_Print("The Solar Flashlight is empty! Hold Altfire to charge!")
+		SFLG A 1 A_ClearRefire
+		Goto Ready
+	Altfire:
+		SFLG BBCCDE 1 
+		SFLG A 0 A_PlayWeaponSound("flashlight/open")
+		SFLG FGGHHI 1
+		SFLW A 0 A_PlaySoundEx("flashlight/wind","SoundSlot5")
+		SFLW AAAA 1
+		SFLW BBBCCDDD 1 A_GiveInventory("SolarFlashlightEnergy",1)
+		SFLW A 1 A_Refire
+		SFLW A 4
+		SFLG III 1
+		SFLG E 0 A_PlayWeaponSound("flashlight/close")
+		SFLG HHGGFEEDCB 1
+		Goto Ready
+	Althold:
+		SFLW A 0 A_PlaySoundEx("flashlight/wind","SoundSlot5")
+		SFLW AAAA 1
+		SFLW BBBCCDDD 1 A_GiveInventory("SolarFlashlightEnergy",1)
+		SFLW A 1 A_Refire
+		SFLW A 4
+		SFLG III 1
+		SFLG E 0 A_PlayWeaponSound("flashlight/close")
+		SFLG HHGGFEEDCB 1
+		Goto Ready
+	}
+}
