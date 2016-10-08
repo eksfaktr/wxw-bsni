@@ -1,0 +1,62 @@
+statusbar normal, fullscreenoffsets
+{
+	// left bar
+	DrawImage "HUDBACK1", 0, -32;
+	DrawShader 128, 4, vertical, reverse, 0, -32; // top
+	DrawShader 128, 4, vertical, 0, -4; // bottom
+	DrawShader 4, 32, horizontal, 0, -32; // left
+	DrawShader 4, 32, horizontal, reverse, 124, -32; // right
+	
+	// left bar contents
+	// health
+	DrawImage "NIXSPACE", 8, -27;
+	DrawImage "NIXSPACE", 24, -27;
+	DrawImage "NIXSPACE", 40, -27;
+	DrawNumber 3, NIXIEFONT, Untranslated, Health, Alignment(right), 55, -27, 0;
+	DrawShader 48, 1, vertical, reverse, 7, -27; //top
+	DrawShader 48, 1, vertical, 7, -7; //bottom
+	DrawShader 4, 21, horizontal, 7, -27; //left
+	DrawShader 4, 21, horizontal, reverse, 53, -27; //right
+	DrawString ARB06, Orange, "Health", 32, -6, 0, Alignment(center);
+	
+	// shield
+	DrawImage "NIXSPACE", 72, -27;
+	DrawImage "NIXSPACE", 86, -27;
+	DrawImage "NIXSPACE", 102, -27;
+	DrawNumber 3, NIXIEFONT, Untranslated, Armor, Alignment(right), 117, -27, 0;
+	DrawShader 48, 1, vertical, reverse, 71, -27; //top
+	DrawShader 48, 1, vertical, 71, -7; //bottom
+	DrawShader 4, 21, horizontal, 71, -27; //left
+	DrawShader 4, 21, horizontal, reverse, 115, -27; //right
+	DrawString ARB06, Orange, "Shield", 92, -6, 0, Alignment(center);
+	
+	// right bar
+	DrawImage "HUDBACK1", -128, -32;
+	DrawShader 128, 4, vertical, reverse, -128, -32; // top
+	DrawShader 128, 4, vertical, -128, -4; // bottom
+	DrawShader 4, 32, horizontal, -128, -32; // left
+	DrawShader 4, 32, horizontal, reverse, -4, -32; // right
+	
+	// right bar contents
+	DrawImage "NIXSPACE", -24, -27;
+	DrawImage "NIXSPACE", -40, -27;
+	DrawImage "NIXSPACE", -56, -27;
+	DrawNumber 3, NIXIEFONT, Untranslated, Ammo1, Alignment(right), -9, -27, 0;
+	DrawShader 48, 1, vertical, reverse, -56, -27; //top
+	DrawShader 48, 1, vertical, -56, -7; //bottom
+	DrawShader 4, 21, horizontal, -56, -27; //left
+	DrawShader 4, 21, horizontal, reverse, -11, -27; //right
+	DrawString ARB06, Orange, "Battery", -32, -6, 0, Alignment(center);
+	
+	DrawString ARB06, Gold, "ww-aliens", -96, -28, 0, Alignment(center);
+	DrawString ARB06, Gold, "work in", -96, -20, 0, Alignment(center);
+	DrawString ARB06, Gold, "progress!", -96, -12, 0, Alignment(center);
+}
+
+statusbar fullscreen, fullscreenoffsets
+{
+	DrawImage "NIXSPACE", 0, -21;
+	DrawImage "NIXSPACE", 16, -21;
+	DrawImage "NIXSPACE", 32, -21;
+	DrawNumber 3, NIXIEFONT, Untranslated, Health, Alignment(right), 47, -21, 0;
+}
