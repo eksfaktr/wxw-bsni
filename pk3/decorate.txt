@@ -1,0 +1,19 @@
+// Weasel Presents: ROBOTS - Batteries Not Included
+// #include "actors/missiles.txt"
+
+#include "actors/weapons/1.txt" // Kinetic Pistol
+//#include "actors/weapons/2.txt"
+#include "actors/weapons/0.txt" // Solar Flashlight
+
+ACTOR WWAPlayer : DoomPlayer
+{
+	Player.StartItem "KineticBlaster"
+	Player.StartItem "KineticCharge", 100
+}
+
+ACTOR ShieldSystem : BasicArmorBonus
+{
+	Armor.MaxSaveAmount 100
+	Armor.SaveAmount 1
+	Armor.SavePercent 75
+}

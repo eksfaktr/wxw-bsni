@@ -1,0 +1,11 @@
+pointlight SOLARFLASH
+{
+    color 1.0 1.0 1.0
+    size 64
+    offset 0 0 0
+} 
+
+object SolarFlashlightBeam
+{
+    frame SFLB { light SOLARFLASH }
+}

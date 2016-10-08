@@ -1,0 +1,130 @@
+#include "zcommon.acs"
+#library "BNI3"
+
+SCRIPT "KineticCharge" ENTER
+{
+	int VelX;
+	int VelY;
+	while (TRUE)
+	{
+		VelX = GetActorVelX(0);
+		VelY = GetActorVelY(0);
+		if (SqRt((VelX * VelX) + (VelY * VelY)))
+		{
+			GiveInventory("KineticCharge", 1);
+			delay(8);
+		}
+		else { delay(1); }
+	}
+}
+
+// Apothem's shield system script.
+#define RECHARGEDELAYTIME 105 //delay before the recharge takes place.
+#define RECHARGETIME 1 //delay between each addition of shield hit points
+#define MAXPLAYERS 32
+
+int isrecharging[MAXPLAYERS];
+script "ShieldRegen" (int pnum) //Recharging script.
+{
+	if (getactorproperty(activatortid(), APROP_Health) <= 0)
+	{
+	   terminate;
+	}
+   int oldval = getactorproperty(activatortid(), APROP_health);
+	if (isrecharging[playernumber()] == 0)
+	{
+	   localambientsound("recharge", 127);
+	   isrecharging[playernumber()]++;
+	}
+   for (int a = checkinventory("armor"); a < 100; a++)
+	  {
+		 if (checkinventory("armor") < a || getactorproperty(activatortid(), APROP_health) < oldval || getactorproperty(activatortid(), APROP_Health) <= 0)
+		 {
+			isrecharging[playernumber()] = 0;
+			terminate;
+		 }
+			if (getactorproperty(activatortid(), APROP_health) > oldval)
+		 {
+			 oldval =getactorproperty(activatortid(), APROP_health);
+		 }
+	  
+		 oldval = getactorproperty(activatortid(), APROP_health);
+		 giveactorinventory(activatortid(), "ShieldSystem", 1);
+		 delay(rechargetime);
+	  }
+	  isrecharging[playernumber()] = 0;
+	  
+}
+
+function str chkshield (int pnum) //this function is to be used for custom shielding values - mostly for the APS
+{
+   return "ShieldSystem"; //if you want to adjust the armor resilience or anything, just change this to your custom armor bonus.
+				  //if you wanted to check for other conditions as well, this would be the best place to put your checks.
+}
+
+
+script "Shielding" (int pnum) //status check script
+{
+   int acounter;
+   int oldhp = getactorproperty(activatortid(), APROP_health);
+   int oldval = checkinventory("armor");
+   
+   While (checkinventory("armor") == oldval)  //counter loop to make sure the charging process isn't interupted.
+   {
+	  acounter++;
+	  delay(1);
+	  if (acounter == RECHARGEDELAYTIME && checkinventory("armor") < 100) //if the loop has reached it's proper delay time (in tics)
+	  {
+		 acs_namedexecutealways("ShieldRegen",0,playernumber(),0,0);
+		 break;
+	  }
+	  
+   /*   if(checkinventory("armor") == 0)    //failed attempt at trying for the dead beep. Try again next time charlie.
+	  {
+		 delay (4);
+		 localambientsound("deadbeep",127);
+		 acounter += 4;
+	  }*/
+	  
+	  if (checkinventory("armor") < oldval || getactorproperty(activatortid(), APROP_health) < oldhp) //if the armor or health changes it resets the countdown
+	  {
+		 if( checkinventory("armor") < oldval && getactorproperty(activatortid(), APROP_health) == oldhp)
+		 localambientsound("ohshit", 127);
+		 acounter = 0;
+		 oldval = checkinventory("armor");
+		 oldhp = getactorproperty(activatortid(), APROP_health);
+	  }
+	  if (getactorproperty(activatortid(), APROP_health) > oldhp)
+	  {
+		 oldhp = getactorproperty(activatortid(), APROP_health);
+	  }
+	  if (checkinventory("armor") > oldval)
+	  {
+		 oldval = checkinventory("armor");
+	  }
+
+	  if (getactorproperty(activatortid(), APROP_Health) <= 0)
+	   {
+		 break;
+	  }
+   }
+   if (getactorproperty(activatortid(), APROP_Health) >= 1)
+	{
+	  delay(1);
+	  restart;
+   }
+}
+
+
+Script 1 ENTER //This script is just meant to initialize the system.
+{
+thing_changetid(0,1000 + playernumber());
+acs_namedexecutealways("Shielding",0,0,0,0);
+}
+
+Script 601 RESPAWN
+{
+thing_changetid(0,1000 + playernumber());
+acs_namedexecutealways("Shielding",0,0,0,0);
+}
+
